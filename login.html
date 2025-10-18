@@ -3,45 +3,168 @@
 
 <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đăng nhập</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .card {
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .card-header {
+            background-color: #667eea;
+            color: white;
+            text-align: center;
+            padding: 30px 20px;
+            border-radius: 16px 16px 0 0;
+        }
+
+        .card-header h3 {
+            margin: 0;
+            font-weight: 600;
+        }
+
+        .form-control {
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+        }
+
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+
+        .btn-login {
+            background-color: #667eea;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 500;
+            width: 100%;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-login:hover {
+            background-color: #5568d3;
+        }
+
+        .input-group-text {
+            background-color: #f0f0f0;
+            border-radius: 10px 0 0 10px;
+        }
+
+        .alert {
+            font-size: 14px;
+        }
+    </style>
 </head>
 
-<body class="bg-light">
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-4">
-                <div class="card shadow">
-                    <div class="card-body">
-                        <h4 class="card-title text-center mb-4">Đăng nhập</h4>
-                        <div class="mb-3">
-                            <input type="email" id="email" class="form-control" placeholder="Email" />
-                        </div>
-                        <div class="mb-3">
-                            <input type="password" id="password" class="form-control" placeholder="Mật khẩu" />
-                        </div>
-                        <button class="btn btn-primary w-100" onclick="login()">Đăng nhập</button>
-                        <div class="text-danger mt-3" id="errorMsg"></div>
+<body>
+    <div class="card">
+        <div class="card-header">
+            <h3>🔐 Đăng Nhập</h3>
+            <p class="mb-0 mt-2" style="opacity: 0.9;">Quản lý cửa hàng</p>
+        </div>
+        <div class="card-body p-4">
+            <div id="errorMsg" class="alert alert-danger d-none"></div>
+            <form id="loginForm">
+                <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    <div class="input-group">
+                        <span class="input-group-text">@</span>
+                        <input type="email" id="email" class="form-control" placeholder="Nhập email" required>
                     </div>
                 </div>
-            </div>
+                <div class="mb-3">
+                    <label class="form-label">Mật khẩu</label>
+                    <div class="input-group">
+                        <span class="input-group-text">🔒</span>
+                        <input type="password" id="password" class="form-control" placeholder="Nhập mật khẩu" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-login mt-3">Đăng Nhập</button>
+            </form>
         </div>
     </div>
 
     <script>
-        function login() {
-            const email = document.getElementById("email").value.trim();
-            const password = document.getElementById("password").value.trim();
-            const errorMsg = document.getElementById("errorMsg");
+        // Khởi tạo dữ liệu mẫu nếu chưa có
+        function initData() {
+            if (!localStorage.getItem('users')) {
+                localStorage.setItem('users', JSON.stringify([
+                    { id: 1, name: 'Admin User', email: 'admin@example.com', password: '123456', role: 'Admin' },
+                    { id: 2, name: 'Normal User', email: 'user@example.com', password: '123456', role: 'User' }
+                ]));
+            }
 
-            if (email === "admin@example.com" && password === "123456") {
-                localStorage.setItem("isLoggedIn", "true");
-                window.location.href = "admin.html";
-            } else {
-                errorMsg.textContent = "Email hoặc mật khẩu không đúng!";
+            if (!localStorage.getItem('products')) {
+                localStorage.setItem('products', JSON.stringify([
+                    { id: 1, name: 'iPhone 15 Pro Max', price: 29990000, description: 'Điện thoại cao cấp với chip A17 Pro', image: 'https://tse3.mm.bing.net/th/id/OIP.onDATvhNBK-7kfjq5wkLMwHaHa?pid=Api&P=0&h=180' },
+                    { id: 2, name: 'MacBook Air M3', price: 35990000, description: 'Laptop siêu mỏng nhẹ với chip M3', image: 'https://tse2.mm.bing.net/th/id/OIP.QJYIxFXDqJt-p4tQYsrWfQHaEK?pid=Api&P=0&h=180' },
+                    { id: 3, name: 'AirPods Pro 2', price: 6990000, description: 'Tai nghe không dây chống ồn', image: 'https://cdn.mos.cms.futurecdn.net/qMRagLMmCvMsHQHfvmWT2e.jpg' }
+                ]));
             }
         }
+
+        // Kiểm tra nếu đã đăng nhập thì chuyển hướng
+        function checkLoginStatus() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            const user = JSON.parse(localStorage.getItem('currentUser'));
+
+            if (isLoggedIn && user) {
+                window.location.href = user.role === 'Admin' ? 'admin.html' : 'home.html';
+            }
+        }
+
+        // Xử lý đăng nhập
+        function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const errorMsg = document.getElementById('errorMsg');
+
+            if (!email || !password || password.length < 6) {
+                errorMsg.textContent = '❌ Vui lòng nhập thông tin hợp lệ!';
+                errorMsg.classList.remove('d-none');
+                return;
+            }
+
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const user = users.find(u => u.email === email && u.password === password);
+
+            if (user) {
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('currentUser', JSON.stringify(user));
+                window.location.href = user.role === 'Admin' ? 'admin.html' : 'home.html';
+            } else {
+                errorMsg.textContent = '❌ Email hoặc mật khẩu không đúng!';
+                errorMsg.classList.remove('d-none');
+                setTimeout(() => errorMsg.classList.add('d-none'), 3000);
+            }
+        }
+
+        // Khởi chạy
+        initData();
+        checkLoginStatus();
+        document.getElementById('loginForm').addEventListener('submit', handleLogin);
+        document.getElementById('email').addEventListener('input', () => document.getElementById('errorMsg').classList.add('d-none'));
+        document.getElementById('password').addEventListener('input', () => document.getElementById('errorMsg').classList.add('d-none'));
     </script>
 </body>
 
 </html>
+
