@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản trị</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="admin.css">
+</head>
+
+<body>
+    <div class="header">
+        <div class="container-fluid px-4">
+            <div class="d-flex justify-content-between align-items-center">
+                <h4>⚙️ Trang Quản Trị</h4>
+                <div class="d-flex align-items-center gap-3">
+                    <span>Xin chào, <strong id="userName"></strong></span>
+                    <button class="btn btn-logout" onclick="logout()">Đăng Xuất</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid px-4 py-4">
+        <ul class="nav nav-tabs mb-4">
+            <li class="nav-item">
+                <a class="nav-link active" id="usersTab" href="#" onclick="switchTab('users')">👥 Người Dùng</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="productsTab" href="#" onclick="switchTab('products')">📦 Sản Phẩm</a>
+            </li>
+        </ul>
+
+        <!-- Users Section -->
+        <div id="usersSection">
+            <div class="card mb-3">
+                <div class="card-header">➕ Thêm người dùng mới</div>
+                <div class="card-body">
+                    <form id="addUserForm" class="row g-3">
+                        <div class="col-md-3">
+                            <input type="text" id="userName" class="form-control" placeholder="Họ tên" required>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="email" id="userEmail" class="form-control" placeholder="Email" required>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="password" id="userPassword" class="form-control" placeholder="Mật khẩu"
+                                required>
+                        </div>
+                        <div class="col-md-2">
+                            <select id="userRole" class="form-select">
+                                <option value="Admin">Admin</option>
+                                <option value="User">User</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-success w-100">Thêm</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">Danh sách người dùng</div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table mb-0">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Họ tên</th>
+                                    <th>Email</th>
+                                    <th>Vai trò</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody id="userTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Products Section -->
+        <div id="productsSection" style="display: none;">
+            <div class="card mb-3">
+                <div class="card-header">➕ Thêm sản phẩm mới</div>
+                <div class="card-body">
+                    <form id="addProductForm" class="row g-3">
+                        <div class="col-md-3">
+                            <input type="text" id="productName" class="form-control" placeholder="Tên sản phẩm"
+                                required>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="number" id="productPrice" class="form-control" placeholder="Giá" required>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" id="productDescription" class="form-control" placeholder="Mô tả"
+                                required>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="url" id="productImage" class="form-control" placeholder="URL ảnh" required>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-success w-100">Thêm</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">Danh sách sản phẩm</div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table mb-0">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Ảnh</th>
+                                    <th>Tên</th>
+                                    <th>Giá</th>
+                                    <th>Mô tả</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody id="productTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="admin.js"></script>
+</body>
+
+</html>
