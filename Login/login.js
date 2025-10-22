@@ -1,4 +1,3 @@
-// Khởi tạo dữ liệu mẫu
 function initData() {
     if (!localStorage.getItem('users')) {
         localStorage.setItem('users', JSON.stringify([
@@ -71,7 +70,7 @@ function handleLogin(e) {
     if (user) {
         localStorage.setItem('isLoggedIn', 'true');
         localStorage.setItem('currentUser', JSON.stringify(user));
-        window.location.href = user.role === 'Admin' ? 'admin.html' : 'home.html';
+        window.location.href = user.role === 'Admin' ? '../Admin/Admin.html' : '../Home/Home.html';
     } else {
         errorMsg.textContent = '❌ Email hoặc mật khẩu không đúng!';
         errorMsg.classList.remove('d-none');
